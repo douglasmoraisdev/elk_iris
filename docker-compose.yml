@@ -25,28 +25,30 @@ services:
       - "5601:5601"
     restart: always
     depends_on:
-      - elasticsearch  
-
-  # LogStash
-  #logstash:
-  #  image: logstash:7.3.0
-  #  container_name: logstash_elk
-  #  restart: always
-  #  ports:
-  #    - "5959:5959"
-  #  depends_on:
-  #    - elasticsearch  
-  #  volumes:
-  #    - ./logstash/pipeline:/usr/share/logstash/pipeline/
+      - elasticsearch
 
   # Filebeat
-  filebeat:
-    image: docker.elastic.co/beats/filebeat:7.3.0
-    container_name: filebeat_elk
-    entrypoint: "filebeat -e -strict.perms=false"    
+  #filebeat:
+  #  image: docker.elastic.co/beats/filebeat:7.3.0
+  #  container_name: filebeat_elk
+  #  entrypoint: "filebeat -e -strict.perms=false"    
+  #  restart: always
+  #  depends_on:
+  #    - elasticsearch
+  #  volumes:
+  #    - "./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
+  #    - "/Users/douglasdossantos/work/iris-middleware-vtex/log/:/usr/share/filebeat/logs/"
+
+  # FluentD
+  fluentd:
+    #image: fluentd:latest
+    build: ./fluentd
+    container_name: fluentd_elk
+    ports:
+      - "24224:24224"
+      - 24224:24224/udp
     restart: always
     depends_on:
       - elasticsearch
     volumes:
-      - "./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
-      - "/home/douglas/work/iris-middleware-vtex/log/vtex_middleware.log:/usr/share/filebeat/logs/vtex_middleware.log"
+      - ./fluentd/conf:/fluentd/etc
