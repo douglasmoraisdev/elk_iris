@@ -27,6 +27,18 @@ services:
     depends_on:
       - elasticsearch
 
+  #Logstash
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.3.2
+    container_name: logstash_elk
+    restart: always
+    depends_on:
+      - elasticsearch
+    volumes:
+      - "./logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro"
+      - "./logstash/pipeline/twitter.conf:/usr/share/logstash/pipeline/twitter.conf:ro"
+    #  - "./logstash/sample/testdata.log:/home/logstash/testdata.log"
+
   # Filebeat
   #filebeat:
   #  image: docker.elastic.co/beats/filebeat:7.3.0
@@ -40,15 +52,14 @@ services:
   #    - "/Users/douglasdossantos/work/iris-middleware-vtex/log/:/usr/share/filebeat/logs/"
 
   # FluentD
-  fluentd:
-    #image: fluentd:latest
-    build: ./fluentd
-    container_name: fluentd_elk
-    ports:
-      - "24224:24224"
-      - 24224:24224/udp
-    restart: always
-    depends_on:
-      - elasticsearch
-    volumes:
-      - ./fluentd/conf:/fluentd/etc
+  #fluentd:
+  #  build: ./fluentd
+  #  container_name: fluentd_elk
+  #  ports:
+  #    - "24224:24224"
+  #    - 24224:24224/udp
+  #  restart: always
+  #  depends_on:
+  #    - elasticsearch
+  #  volumes:
+  #    - ./fluentd/conf:/fluentd/etc
