@@ -1,4 +1,4 @@
-# elk_iris
+# elk_iris - A Elasticsearch, Logstash, Kibana stack for Twitter Post Monitoring
 
 ## Subindo o stack
 
